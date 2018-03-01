@@ -1,43 +1,39 @@
 <template>
-    <my-page title="带壳截图">
-        <ul>
-            <li v-for="phone in phones" @click="selectShell(phone)">{{ phone.name }}</li>
-        </ul>
-        <ui-raised-button class="file-select-btn" label="选择图片" primary>
-            <input type="file" class="ui-file-button" accept="image/*" @change="fileChange($event)">
-        </ui-raised-button>
+    <my-page :title="title" backable>
+        <div class="btns">
+            <ui-raised-button class="btn file-select-btn" label="上传截图" primary>
+                <input type="file" class="ui-file-button" accept="image/*" @change="fileChange($event)">
+            </ui-raised-button>
+            <!-- <ui-raised-button class="btn" label="选择设备" @click="selectDevice" /> -->
+        </div>
+        
         <canvas id="canvas"></canvas>
     </my-page>
 </template>
 
 <script>
+    import devices from '@/data/data'
+
     export default {
         data () {
             return {
-                phones: [
-                    {
-                        name: '通用',
-                        img: 'http://img1.yunser.com/screenshot/ke.png',
-                        position: [263, 482, 1076, 1922]
-                    },
-                    {
-                        name: '小米',
-                        img: 'http://img1.yunser.com/screenshot/mi.png',
-                        position: [196, 296, 713, 1284]
-                    },
-                    {
-                        name: '三星 Note4 白色',
-                        img: 'http://img1.yunser.com/screenshot/samsung_note4_white.png',
-                        position: [176, 320, 732, 1290]
-                    }
-                ],
+                title: '带壳截图',
+                phones: devices,
                 phone: null,
                 screenshot: '/static/img/screenshot.png'
             }
         },
         mounted() {
-            this.phone = this.phones[0]
-            // this.init()
+            let deviceId = this.$route.params.id
+            console.log(deviceId)
+            for (let device of devices) {
+                if (device.id === deviceId) {
+                    this.phone = device
+                    this.title = this.phone.name
+                    this.init()
+                    break
+                }
+            }
         },
         methods: {
             selectShell(phone) {
@@ -94,6 +90,12 @@
 </script>
 
 <style lang="scss" scoped>
+.btns {
+    margin-bottom: 16px;
+    .btn {
+        margin-right: 8px;
+    }
+}
 .ui-file-button{
     position: absolute;
     left: 0;
@@ -106,6 +108,7 @@
     width: 300px;
 }
 canvas {
+    max-width: 100%;
     // background-color: #f00;
     border: 1px solid #e9e9e9;
 }
