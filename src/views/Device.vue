@@ -85,8 +85,10 @@
 </script>
 
 <style lang="scss" scoped>
+@import '../scss/var';
+
 .phone-list {
-    overflow: hidden;
+    @include clearfix;
     .item {
         float: left;
         width: 140px;
